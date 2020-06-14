@@ -1,4 +1,4 @@
-package com.cambio.cds.cambiocdsdemo;
+package com.cambio.cds;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,0 +1,11 @@
+cds:
+  model:
+    search:
+      elastic:
+       address: localhost:31320
+
+awss3:
+    #endpointUrl: https://s3.us-east-2.amazonaws.com
+    accessKey: XXXXXXXXXXXXXXXXX
+    secretKey: XXXXXXXXXXXXXXXXXXXXXXXXXX
+    bucketName: cds-model-docs
