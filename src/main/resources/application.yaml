@@ -2,10 +2,11 @@ cds:
   model:
     search:
       elastic:
-       address: localhost:31320
+        address: f276c08588794b199394628eba9abecd.us-east-1.aws.found.io:9243
+
 
 awss3:
     #endpointUrl: https://s3.us-east-2.amazonaws.com
-    accessKey: XXXXXXXXXXXXXXXXX
-    secretKey: XXXXXXXXXXXXXXXXXXXXXXXXXX
+    accessKey: AKIAT4T2T6CZU4ARRFNT
+    secretKey: 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
     bucketName: cds-model-docs

@@ -13,9 +13,8 @@ public interface CdsModelRepository extends ElasticsearchRepository<CdsModelDocu
 
     Stream<CdsModelDocument> findByKeywordsIn(List<CdsModelKeyword> keywords);
 
-    Stream<CdsModelDocument> findByUrl(String url);
+    Stream<CdsModelDocument> findByModelId(String modelId);
 
-
-
+    Stream<CdsModelDocument> findByKeywordsLanguage(String languageName);
 
 }

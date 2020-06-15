@@ -14,7 +14,7 @@ public class CambioCdsDemoApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(CambioCdsDemoApplication.class, args);
-        startEmbeddedServer();
+        //startEmbeddedServer();
     }
 
     private static void startEmbeddedServer() {

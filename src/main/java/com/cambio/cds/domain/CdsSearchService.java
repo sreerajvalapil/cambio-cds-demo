@@ -1,5 +1,6 @@
 package com.cambio.cds.domain;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.cambio.cds.persistence.CdsModelDocument;
 import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
@@ -32,18 +33,18 @@ public class CdsSearchService {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
 
 
     public List<CdsModel> searchForCdsModel(String language, String searchField) {
         List<CdsModel> searchResponselist = new ArrayList<>() ;
-        saveDocument();
 
+        /* BoolQueryBuilder outer = QueryBuilders.boolQuery();
+        outer.must(QueryBuilders.matchQuery("modelId","test1"));
+        final SearchHits<CdsModelDocument> articles =
+                elasticsearchRestTemplate.search(searchQuery, CdsModelDocument.class,
+                        IndexCoordinates.of("cds-model"));
+         Stream<CdsModelDocument> responseList =  cdsModelRepository.findByUrl("https://www.google.com") ;
 
-/*        BoolQueryBuilder outer = QueryBuilders.boolQuery();
-
-        outer.must(QueryBuilders.matchQuery("modelId","test1"));*/
 
         String field = "keywords";
         final Query searchQuery = new NativeSearchQueryBuilder().
@@ -51,21 +52,22 @@ public class CdsSearchService {
                         Arrays.asList(CdsModelKeyword.builder().language(language).keyword(searchField).build())))
                 .build();
         System.out.println("the query is .... : " +searchQuery.toString());
-       /* final SearchHits<CdsModelDocument> articles =
-                elasticsearchRestTemplate.search(searchQuery, CdsModelDocument.class,
-                        IndexCoordinates.of("cds-model"));*/
+
 
         Stream<CdsModelDocument> responseList = cdsModelRepository.findByKeywordsIn(
                 Arrays.asList(CdsModelKeyword.builder().language(language).keyword(searchField).build()));
+         */
 
-        //Stream<CdsModelDocument> responseList =  cdsModelRepository.findByUrl("https://www.google.com") ;
+        Stream<CdsModelDocument> responseList1 = cdsModelRepository.
+                findByModelId("chf_vaccination_recommendation.v1.test");
 
+        Stream<CdsModelDocument> responseList2 = cdsModelRepository.findByKeywordsLanguage(language);
 
         return searchResponselist;
 
     }
 
-    private void saveDocument() {
+   /* private void saveDocument() {
         // for testing
         Map<String, List<String>> map = new HashMap<>();
         map.put("en", Arrays.asList("keyword1","keyword2"));
@@ -81,5 +83,5 @@ public class CdsSearchService {
                 .url("https://www.google.com")
                 .build();
         cdsModelRepository.save(cdsModelDocument);
-    }
+    }*/
 }

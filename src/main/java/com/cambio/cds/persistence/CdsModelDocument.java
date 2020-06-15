@@ -6,10 +6,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import static org.springframework.data.elasticsearch.annotations.FieldType.Nested;
 
 @Getter
@@ -20,20 +18,16 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Neste
 public class CdsModelDocument {
 
     @Id
+    @Field(store = true, type = FieldType.Text)
     private String modelId;
 
     @Field(type = Nested, includeInParent = true)
-    private List<CdsModelKeyword> keywords;
+    @Builder.Default
+    private List<CdsModelKeyword> keywords = new ArrayList<>();
 
 
-/*    @Field(type = FieldType.Object)
+/* @Field(type = FieldType.Object)
     @Builder.Default
     private Map<String, List<String>> countryKeyWordMap = new HashMap<>();*/
-
-    @NonNull
-    @Field(store = true, type = FieldType.Text)
-    private String url;
-
-
 
 }
