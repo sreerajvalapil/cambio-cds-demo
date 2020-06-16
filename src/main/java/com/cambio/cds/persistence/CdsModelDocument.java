@@ -17,6 +17,7 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Neste
 @Document(indexName = "cds-model")
 public class CdsModelDocument {
 
+    @EqualsAndHashCode.Include
     @Id
     @Field(store = true, type = FieldType.Text)
     private String modelId;

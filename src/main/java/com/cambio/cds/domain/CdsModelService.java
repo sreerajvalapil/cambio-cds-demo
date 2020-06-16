@@ -70,6 +70,9 @@ public class CdsModelService {
     public byte[] downloadCdsModel(String cdsModelId)  {
         byte[] content ;
         S3Object s3Object = s3client.getObject(bucketName, cdsModelId);
+        if(s3Object == null) {
+            throw  new IllegalArgumentException("File down not exist in AWS s3 " +cdsModelId);
+        }
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         try {
             content = IOUtils.toByteArray(inputStream);

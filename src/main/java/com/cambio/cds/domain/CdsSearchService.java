@@ -5,6 +5,7 @@ import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
 import com.cambio.cds.rest.dto.CdsModel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,7 +26,7 @@ public class CdsSearchService {
 
 
         List<CdsModelDocument> cdsModelDocumentList = new ArrayList<>();
-        if (searchField.isBlank()) {
+        if (StringUtils.isEmpty(searchField)) {
             cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguage(language);
         } else {
             // Exact match , Can use query to improve the search
