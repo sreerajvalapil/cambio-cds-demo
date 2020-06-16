@@ -25,9 +25,4 @@ public class CdsModelDocument {
     @Builder.Default
     private List<CdsModelKeyword> keywords = new ArrayList<>();
 
-
-/* @Field(type = FieldType.Object)
-    @Builder.Default
-    private Map<String, List<String>> countryKeyWordMap = new HashMap<>();*/
-
 }

@@ -1,6 +1,7 @@
 package com.cambio.cds.rest;
 
 import com.cambio.cds.domain.CdsModelService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -9,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/models")
 public class CdsModelController {
 
-    @Autowired
-    private CdsModelService cdsModelService;
+    private final CdsModelService cdsModelService;
+
+    public CdsModelController(CdsModelService cdsModelService) {
+        this.cdsModelService = cdsModelService;
+    }
 
     @PostMapping(value= "/upload")
     public ResponseEntity<String> uploadFile(@RequestPart(value= "file")

@@ -14,7 +14,9 @@ public class CambioCdsDemoApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(CambioCdsDemoApplication.class, args);
-        //startEmbeddedServer();
+        // The application was tested with Embedded elastic server , But the version 6.8.3 does not support
+        //spring-data-elastic 4.0 version , So using a cloud elastic hosted in elastic.io
+        // startEmbeddedServer();
     }
 
     private static void startEmbeddedServer() {

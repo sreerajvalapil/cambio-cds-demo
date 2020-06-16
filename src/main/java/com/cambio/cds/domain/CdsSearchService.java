@@ -1,87 +1,60 @@
 package com.cambio.cds.domain;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.cambio.cds.persistence.CdsModelDocument;
 import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
 import com.cambio.cds.rest.dto.CdsModel;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.GetQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.http.StreamingHttpOutputMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-
+@Slf4j
 @Service
 public class CdsSearchService {
 
-    @Autowired
-    private CdsModelRepository cdsModelRepository ;
+    private final CdsModelRepository cdsModelRepository;
 
-    @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
-
-
+    public CdsSearchService(CdsModelRepository cdsModelRepository) {
+        this.cdsModelRepository = cdsModelRepository;
+    }
 
     public List<CdsModel> searchForCdsModel(String language, String searchField) {
-        List<CdsModel> searchResponselist = new ArrayList<>() ;
-
-        /* BoolQueryBuilder outer = QueryBuilders.boolQuery();
-        outer.must(QueryBuilders.matchQuery("modelId","test1"));
-        final SearchHits<CdsModelDocument> articles =
-                elasticsearchRestTemplate.search(searchQuery, CdsModelDocument.class,
-                        IndexCoordinates.of("cds-model"));
-         Stream<CdsModelDocument> responseList =  cdsModelRepository.findByUrl("https://www.google.com") ;
 
 
-        String field = "keywords";
-        final Query searchQuery = new NativeSearchQueryBuilder().
-                withQuery(matchQuery(field,
-                        Arrays.asList(CdsModelKeyword.builder().language(language).keyword(searchField).build())))
-                .build();
-        System.out.println("the query is .... : " +searchQuery.toString());
+        List<CdsModelDocument> cdsModelDocumentList = new ArrayList<>();
+        if (searchField.isBlank()) {
+            cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguage(language);
+        } else {
+            // Exact match , Can use query to improve the search
+            cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguageOrKeywordsKeyword(language, searchField);
 
-
-        Stream<CdsModelDocument> responseList = cdsModelRepository.findByKeywordsIn(
-                Arrays.asList(CdsModelKeyword.builder().language(language).keyword(searchField).build()));
-         */
-
-        Stream<CdsModelDocument> responseList1 = cdsModelRepository.
-                findByModelId("chf_vaccination_recommendation.v1.test");
-
-        Stream<CdsModelDocument> responseList2 = cdsModelRepository.findByKeywordsLanguage(language);
-
-        return searchResponselist;
+        }
+        return cdsModelDocumentList.stream().map(this::toCdsModel)
+                .collect(Collectors.toList());
 
     }
 
-   /* private void saveDocument() {
-        // for testing
-        Map<String, List<String>> map = new HashMap<>();
-        map.put("en", Arrays.asList("keyword1","keyword2"));
-        map.put("sv", Arrays.asList("keywordö","keywordä"));
+    private CdsModel toCdsModel(CdsModelDocument cdsModelDocument) {
+        String url = ServletUriComponentsBuilder.
+                fromCurrentContextPath().path("/api/model/" + cdsModelDocument.getModelId()).toUriString();
 
-        List<CdsModelKeyword> cdsModelKeywordList =
-                Arrays.asList(CdsModelKeyword.builder().language("en").keyword("keyword1").build(),
-                CdsModelKeyword.builder().language("sv").keyword("keyword2").build());
-
-        CdsModelDocument cdsModelDocument = CdsModelDocument.builder()
-                .modelId("test1")
-                .keywords(cdsModelKeywordList)
-                .url("https://www.google.com")
+        Map<String, List<String>> keywordDetailsMap = new HashMap<>();
+        for (CdsModelKeyword cdsKeyword : cdsModelDocument.getKeywords()) {
+            String mapKey = "keywords_" + cdsKeyword.getLanguage();
+            List<String> mapValue = keywordDetailsMap.get(mapKey);
+            if (mapValue == null) {
+                keywordDetailsMap.put(mapKey, new ArrayList<>(Arrays.asList(cdsKeyword.getKeyword())));
+            } else {
+                mapValue.add(cdsKeyword.getKeyword());
+            }
+        }
+        return CdsModel.builder().id(cdsModelDocument.getModelId())
+                .keywordDetails(keywordDetailsMap)
+                .url(url)
                 .build();
-        cdsModelRepository.save(cdsModelDocument);
-    }*/
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.cambio.cds.domain;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -9,34 +8,39 @@ import com.cambio.cds.persistence.CdsModelDocument;
 import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 @Slf4j
 @Service
 public class CdsModelService {
 
-    @Autowired
-    private AmazonS3 s3client;
+    private final AmazonS3 s3client;
 
-    @Autowired
-    private CdsModelRepository cdsModelRepository ;
+    private final CdsModelRepository cdsModelRepository ;
 
     @Value("${awss3.bucketName}")
     private String bucketName;
+
+    public CdsModelService(AmazonS3 s3client, CdsModelRepository cdsModelRepository) {
+        this.s3client = s3client;
+        this.cdsModelRepository = cdsModelRepository;
+    }
 
     public void uploadFile(MultipartFile multipartFile) {
         try {
@@ -64,13 +68,11 @@ public class CdsModelService {
     }
 
     public byte[] downloadCdsModel(String cdsModelId)  {
-        //File downloadeFile ;
         byte[] content ;
         S3Object s3Object = s3client.getObject(bucketName, cdsModelId);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         try {
             content = IOUtils.toByteArray(inputStream);
-            //FileUtils.copyInputStreamToFile(inputStream,downloadeFile = new File("/Users/user/Desktop/hello.txt"));
         } catch (IOException ex) {
             log.error("Error downloading the the file= ", ex.getMessage());
             throw  new IllegalArgumentException(ex);
