@@ -56,10 +56,6 @@ class CdsSearchControllerTest {
 
        Assertions.assertTrue(objectMapper.writeValueAsString(cdsList)
                .equals(actualResponseBody));
-
-
-
-
     }
 
     @Test
@@ -80,9 +76,6 @@ class CdsSearchControllerTest {
 
         Assertions.assertTrue(objectMapper.writeValueAsString(cdsList)
                 .equals(actualResponseBody));
-
-        System.out.println(objectMapper.writeValueAsString(cdsList));
-        System.out.println(actualResponseBody);
     }
 
 }

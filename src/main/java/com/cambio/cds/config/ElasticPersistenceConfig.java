@@ -23,7 +23,8 @@ public class ElasticPersistenceConfig {
     RestHighLevelClient elasticsearchClient() {
         log.info("using elastic search host {}", elasticHost);
         if (elasticHost.toLowerCase().startsWith("http")) {
-            throw new IllegalArgumentException("The elastic host should not include the protocol, remove it from the configuration or update the source code to support other prots than http.");
+            throw new IllegalArgumentException("The elastic host should not include the protocol, " +
+                    "remove it from the configuration or update the source code to support other prots than http.");
         }
         
         ClientConfiguration.TerminalClientConfigurationBuilder builder =
