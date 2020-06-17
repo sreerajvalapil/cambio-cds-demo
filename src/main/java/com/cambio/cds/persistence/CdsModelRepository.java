@@ -8,7 +8,12 @@ import java.util.List;
 @Repository
 public interface CdsModelRepository extends ElasticsearchRepository<CdsModelDocument,String> {
 
+    @Override
+    List<CdsModelDocument> findAll();
+
     List<CdsModelDocument> findByKeywordsLanguage(String languageName);
+
+    List<CdsModelDocument> findByKeywordsKeyword(String keyword);
 
     List<CdsModelDocument> findByKeywordsLanguageOrKeywordsKeyword(String languageName,String keyWord);
 

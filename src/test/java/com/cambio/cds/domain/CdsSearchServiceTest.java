@@ -31,25 +31,43 @@ class CdsSearchServiceTest {
         cdsSearchService = new CdsSearchService(cdsModelRepository);
     }
 
-    @DisplayName("Test the search with only language")
+    @DisplayName("Test the global search ")
     @Test
-    void testWithLanguageOnly() {
-        given(this.cdsModelRepository.findByKeywordsLanguage("en"))
-                .willReturn(Arrays.asList(CdsModelDocument.builder().modelId("test1")
+    void testGlobalSearch() {
+        given(this.cdsModelRepository.findAll())
+                .willReturn(Arrays.asList(
+                        CdsModelDocument.builder().modelId("test1")
                         .keywords(Arrays.asList(CdsModelKeyword.builder().language("en")
-                                .keyword("HF").build())).build()));
-        List<CdsModel> results = cdsSearchService.searchForCdsModel("en",null);
+                                .keyword("HF").build())).build(),
+                        CdsModelDocument.builder().modelId("test2")
+                                .keywords(Arrays.asList(CdsModelKeyword.builder().language("sv")
+                                        .keyword("BD").build())).build()
+                ));
+        List<CdsModel> results = cdsSearchService.searchForCdsModel("*",null);
+        assertEquals(2, results.size());
         assertEquals("test1", results.get(0).getId());
     }
 
-    @DisplayName("Test the search with only language and Search field")
+    @DisplayName("Test the search term")
+    @Test
+    void testWithSearchTerm() {
+        given(this.cdsModelRepository.findByKeywordsKeyword("Vaccination"))
+                .willReturn(Arrays.asList(CdsModelDocument.builder().modelId("test5")
+                        .keywords(Arrays.asList(CdsModelKeyword.builder().language("en")
+                                .keyword("Vaccination").build())).build()));
+        List<CdsModel> results = cdsSearchService.searchForCdsModel("Vaccination",null);
+        assertEquals("test5", results.get(0).getId());
+    }
+
+
+    @DisplayName("Scopped search with language and SearchField")
     @Test
     void testWithLanguageAndSearchField() {
-        given(this.cdsModelRepository.findByKeywordsLanguageOrKeywordsKeyword("en","Vaccination"))
+        given(this.cdsModelRepository.findByKeywordsLanguage("en"))
                 .willReturn(Arrays.asList(CdsModelDocument.builder().modelId("vaccination_model1")
                         .keywords(Arrays.asList(CdsModelKeyword.builder().language("en")
                                 .keyword("HF").build())).build()));
-        List<CdsModel> results = cdsSearchService.searchForCdsModel("en","Vaccination");
+        List<CdsModel> results = cdsSearchService.searchForCdsModel("en","keywords");
         assertEquals("vaccination_model1", results.get(0).getId());
     }
 

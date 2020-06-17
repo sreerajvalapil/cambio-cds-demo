@@ -16,34 +16,52 @@ import java.util.stream.Collectors;
 @Service
 public class CdsSearchService {
 
+    public static final List<String> searchFieldList =
+            Collections.unmodifiableList(Arrays.asList("keywords"));
+
     private final CdsModelRepository cdsModelRepository;
 
     public CdsSearchService(CdsModelRepository cdsModelRepository) {
         this.cdsModelRepository = cdsModelRepository;
     }
 
-    public List<CdsModel> searchForCdsModel(String language, String searchField) {
+    public List<CdsModel> searchForCdsModel(String languageOrTerm, String searchField) {
 
-
-        List<CdsModelDocument> cdsModelDocumentList = new ArrayList<>();
+        List<CdsModel> results;
+        List<CdsModelDocument> cdsModelDocumentList;
         if (StringUtils.isEmpty(searchField)) {
-            cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguage(language);
+            /* Global search with search term for all language  ,
+             if '*' is searched then fetch all results , otherwise search by keyword exact match  */
+            cdsModelDocumentList = languageOrTerm.equals("*") ? cdsModelRepository.findAll()
+                    : cdsModelRepository.findByKeywordsKeyword(languageOrTerm);
+            results = cdsModelDocumentList.stream().map(cdsModelDocument -> toCdsModel(cdsModelDocument, null))
+                    .collect(Collectors.toList());
+
         } else {
-            // Exact match , Can use query to improve the search
-            cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguageOrKeywordsKeyword(language, searchField);
-
+            // Assuming that , this is a scoped search with languageOrTerm and SearchField
+            if (!searchFieldList.contains(searchField)) {
+                throw new IllegalArgumentException("Invalid searchField passed : " + searchField);
+            }
+            cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguage(languageOrTerm);
+            results = cdsModelDocumentList.stream().map(cdsModelDocument -> toCdsModel(cdsModelDocument, languageOrTerm))
+                    .collect(Collectors.toList());
         }
-        return cdsModelDocumentList.stream().map(this::toCdsModel)
-                .collect(Collectors.toList());
-
+        return results;
     }
 
-    private CdsModel toCdsModel(CdsModelDocument cdsModelDocument) {
-        String url = ServletUriComponentsBuilder.
-                fromCurrentContextPath().path("/api/model/" + cdsModelDocument.getModelId()).toUriString();
+    private CdsModel toCdsModel(CdsModelDocument cdsModelDocument, String language) {
+        String url = generateUrl(cdsModelDocument);
+        List<CdsModelKeyword> keywordList = new ArrayList<>();
+        if (language != null) {
+            keywordList = cdsModelDocument.getKeywords().stream()
+                    .filter(cdsModelKeyword -> cdsModelKeyword.getLanguage().equals(language))
+                    .collect(Collectors.toList());
+        } else {
+            keywordList = cdsModelDocument.getKeywords();
+        }
 
         Map<String, List<String>> keywordDetailsMap = new HashMap<>();
-        for (CdsModelKeyword cdsKeyword : cdsModelDocument.getKeywords()) {
+        for (CdsModelKeyword cdsKeyword : keywordList) {
             String mapKey = "keywords_" + cdsKeyword.getLanguage();
             List<String> mapValue = keywordDetailsMap.get(mapKey);
             if (mapValue == null) {
@@ -56,6 +74,11 @@ public class CdsSearchService {
                 .keywordDetails(keywordDetailsMap)
                 .url(url)
                 .build();
+    }
+
+    private String generateUrl(CdsModelDocument cdsModelDocument) {
+        return ServletUriComponentsBuilder.
+                fromCurrentContextPath().path("/api/models/" + cdsModelDocument.getModelId()).toUriString();
     }
 
 }
