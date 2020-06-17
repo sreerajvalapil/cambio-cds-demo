@@ -2,7 +2,6 @@ package com.cambio.cds.rest;
 
 import com.cambio.cds.domain.CdsModelService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,9 +20,8 @@ public class CdsModelController {
         this.cdsModelService = cdsModelService;
     }
 
-    @PostMapping(value= "/upload")
-    public ResponseEntity<String> uploadFile(@RequestPart(value= "file")
-                                                 final MultipartFile multipartFile) {
+    @PostMapping(value = "/upload")
+    public ResponseEntity<String> uploadFile(@RequestPart(value = "file") final MultipartFile multipartFile) {
         cdsModelService.uploadFile(multipartFile);
         final String response = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully.";
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -49,4 +47,4 @@ public class CdsModelController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    }
+}

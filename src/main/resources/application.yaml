@@ -7,6 +7,6 @@ cds:
 
 awss3:
     #endpointUrl: https://s3.us-east-2.amazonaws.com
-    accessKey: AKIAT4T2T6CZU4ARRFNT
-    secretKey: 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
+    accessKey:
+    secretKey:
     bucketName: cds-model-docs

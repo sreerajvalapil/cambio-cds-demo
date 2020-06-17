@@ -26,12 +26,12 @@ public class ElasticPersistenceConfig {
             throw new IllegalArgumentException("The elastic host should not include the protocol, " +
                     "remove it from the configuration or update the source code to support other prots than http.");
         }
-        
+
         ClientConfiguration.TerminalClientConfigurationBuilder builder =
-            ClientConfiguration.builder()
-                                .connectedTo(elasticHost)
-                                .usingSsl()
-                                .withBasicAuth("elastic", "clmWdiYcFcOIousKooRKSQIn") ;
+                ClientConfiguration.builder()
+                        .connectedTo(elasticHost)
+                        .usingSsl()
+                        .withBasicAuth("elastic", "clmWdiYcFcOIousKooRKSQIn");
         final ClientConfiguration clientConfiguration = builder.build();
         RestHighLevelClient client = RestClients.create(clientConfiguration)
                 .rest();
