@@ -1,8 +1,8 @@
 package com.cambio.cds.domain;
 
-import com.cambio.cds.persistence.CdsModelDocument;
-import com.cambio.cds.persistence.CdsModelKeyword;
-import com.cambio.cds.persistence.CdsModelRepository;
+import com.cambio.cds.persistence.entity.CdsModelDocument;
+import com.cambio.cds.persistence.entity.CdsModelKeyword;
+import com.cambio.cds.persistence.repository.CdsModelRepository;
 import com.cambio.cds.rest.dto.CdsModel;
 import com.cambio.cds.rest.error.CDS_ERROR_CODES;
 import com.cambio.cds.rest.error.CdsValidationException;

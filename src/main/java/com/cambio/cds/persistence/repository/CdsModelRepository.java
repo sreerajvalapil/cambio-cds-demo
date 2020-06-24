@@ -1,5 +1,6 @@
-package com.cambio.cds.persistence;
+package com.cambio.cds.persistence.repository;
 
+import com.cambio.cds.persistence.entity.CdsModelDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 

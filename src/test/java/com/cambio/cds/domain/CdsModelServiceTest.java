@@ -1,11 +1,9 @@
 package com.cambio.cds.domain;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.cambio.cds.persistence.CdsModelDocument;
-import com.cambio.cds.persistence.CdsModelKeyword;
-import com.cambio.cds.persistence.CdsModelRepository;
-import com.cambio.cds.rest.error.CdsValidationException;
+import com.cambio.cds.persistence.entity.CdsModelDocument;
+import com.cambio.cds.persistence.entity.CdsModelKeyword;
+import com.cambio.cds.persistence.repository.CdsModelRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +45,7 @@ class CdsModelServiceTest {
                         .keyword("Vaccination").build())).build() ;
         given(this.cdsModelRepository.save(any(CdsModelDocument.class)))
                 .willReturn(doc);
-        Assertions.assertThrows(CdsValidationException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             cdsModelService.uploadFile(cdsModelFile);
         });
     }
@@ -57,7 +55,7 @@ class CdsModelServiceTest {
         String file = "test";
         MockMultipartFile cdsModelFile = new
                 MockMultipartFile("file", "filename.txt", "text/plain", file.getBytes());
-        Assertions.assertThrows(CdsValidationException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             cdsModelService.uploadFile(cdsModelFile);
         });
     }
@@ -73,7 +71,7 @@ class CdsModelServiceTest {
     @Test
     void testDownloadFile() {
         String cdsModelId = "chf_vaccination_recommendation.v1.test";
-        Assertions.assertThrows(CdsValidationException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             cdsModelService.downloadCdsModel(cdsModelId);
         });
     }
