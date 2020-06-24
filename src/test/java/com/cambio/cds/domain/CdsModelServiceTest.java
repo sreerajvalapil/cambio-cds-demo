@@ -1,10 +1,9 @@
 package com.cambio.cds.domain;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.cambio.cds.persistence.CdsModelDocument;
-import com.cambio.cds.persistence.CdsModelKeyword;
-import com.cambio.cds.persistence.CdsModelRepository;
+import com.cambio.cds.persistence.entity.CdsModelDocument;
+import com.cambio.cds.persistence.entity.CdsModelKeyword;
+import com.cambio.cds.persistence.repository.CdsModelRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

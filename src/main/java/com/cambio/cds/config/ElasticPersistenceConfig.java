@@ -1,6 +1,7 @@
 package com.cambio.cds.config;
 
-import com.cambio.cds.persistence.CdsModelRepository;
+import com.cambio.cds.persistence.repository.CdsModelRepository;
+import com.cambio.cds.persistence.repository.VolvoTruckRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 @Slf4j
 @Configuration
-@EnableElasticsearchRepositories(basePackageClasses = CdsModelRepository.class)
+@EnableElasticsearchRepositories(basePackageClasses = {CdsModelRepository.class, VolvoTruckRepository.class} )
 public class ElasticPersistenceConfig {
 
     @Value("${cds.model.search.elastic.address}")

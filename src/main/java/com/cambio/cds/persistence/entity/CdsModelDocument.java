@@ -1,4 +1,4 @@
-package com.cambio.cds.persistence;
+package com.cambio.cds.persistence.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

@@ -5,6 +5,6 @@ cds:
         address: f276c08588794b199394628eba9abecd.us-east-1.aws.found.io:9243
 
 awss3:
-  accessKey:
-  secretKey:
+  accessKey: AKIAT4T2T6CZX5FG2IUO
+  secretKey: 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
   bucketName: cds-model-docs
