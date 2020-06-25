@@ -74,8 +74,7 @@ public class CdsModelControllerTest {
                 .andExpect(status().is(200))
                 .andReturn();
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
-
-        Assertions.assertTrue(expectedResponse.equals(actualResponseBody));
+        Assertions.assertTrue(actualResponseBody.contains(expectedResponse));
 
     }
 

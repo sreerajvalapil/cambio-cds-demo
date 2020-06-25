@@ -19,6 +19,12 @@ public class ElasticPersistenceConfig {
     @Value("${cds.model.search.elastic.address}")
     private String elasticHost;
 
+    @Value("${cds.model.search.elastic.userName}")
+    private String elasticUserName;
+
+    @Value("${cds.model.search.elastic.accessKey}")
+    private String elasticAccessKey;
+
     @Bean
     RestHighLevelClient elasticsearchClient() {
         log.info("using elastic search host {}", elasticHost);
@@ -31,7 +37,7 @@ public class ElasticPersistenceConfig {
                 ClientConfiguration.builder()
                         .connectedTo(elasticHost)
                         .usingSsl()
-                        .withBasicAuth("elastic", "clmWdiYcFcOIousKooRKSQIn");
+                        .withBasicAuth(elasticUserName, elasticAccessKey);
         final ClientConfiguration clientConfiguration = builder.build();
         RestHighLevelClient client = RestClients.create(clientConfiguration)
                 .rest();

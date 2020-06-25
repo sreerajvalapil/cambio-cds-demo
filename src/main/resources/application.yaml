@@ -3,6 +3,8 @@ cds:
     search:
       elastic:
         address: f276c08588794b199394628eba9abecd.us-east-1.aws.found.io:9243
+        accessKey:
+        userName:
 
 awss3:
   accessKey:
