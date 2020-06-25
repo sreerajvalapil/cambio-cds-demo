@@ -4,6 +4,8 @@ import com.cambio.cds.persistence.CdsModelDocument;
 import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
 import com.cambio.cds.rest.dto.CdsModel;
+import com.cambio.cds.rest.error.CDS_ERROR_CODES;
+import com.cambio.cds.rest.error.CdsValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,9 @@ public class CdsSearchService {
         } else {
             // Assuming that , this is a scoped search with languageOrTerm and SearchField
             if (!searchFieldList.contains(searchField)) {
-                throw new IllegalArgumentException("Invalid searchField passed : " + searchField);
+                throw new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_INVALID_SEARCH_FIELD,
+                        "Invalid searchField passed : " + searchField);
+
             }
             cdsModelDocumentList = cdsModelRepository.findByKeywordsLanguage(languageOrTerm);
             results = cdsModelDocumentList.stream().map(cdsModelDocument -> toCdsModel(cdsModelDocument, languageOrTerm))

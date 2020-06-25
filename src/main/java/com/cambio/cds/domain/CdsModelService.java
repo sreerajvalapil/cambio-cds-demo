@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.cambio.cds.persistence.CdsModelDocument;
 import com.cambio.cds.persistence.CdsModelKeyword;
 import com.cambio.cds.persistence.CdsModelRepository;
+import com.cambio.cds.rest.error.CDS_ERROR_CODES;
+import com.cambio.cds.rest.error.CdsValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
@@ -51,7 +53,7 @@ public class CdsModelService {
             cdsModelRepository.save(cdsModelDoc);
         } catch (final AmazonServiceException ex) {
             log.error("Error= {} while uploading file.", ex.getMessage());
-            throw new IllegalArgumentException(ex);
+            throw  new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_AWS_UPLOAD_ERROR,ex.getMessage());
         }
 
     }
@@ -62,7 +64,7 @@ public class CdsModelService {
             outputStream.write(multipartFile.getBytes());
         } catch (final IOException ex) {
             log.error("Error converting the multi-part file to file= ", ex.getMessage());
-            throw new IllegalArgumentException(ex);
+            throw new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_INVALID_FILE,ex.getMessage());
         }
         return file;
     }
@@ -71,14 +73,15 @@ public class CdsModelService {
         byte[] content;
         S3Object s3Object = s3client.getObject(bucketName, cdsModelId);
         if (s3Object == null) {
-            throw new IllegalArgumentException("File down not exist in AWS s3 " + cdsModelId);
+            throw  new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_AWS_DOWNLOAD_ERROR,
+                    "File: " + cdsModelId +" does not exist in AWS s3 ");
         }
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         try {
             content = IOUtils.toByteArray(inputStream);
         } catch (IOException ex) {
             log.error("Error downloading the the file= ", ex.getMessage());
-            throw new IllegalArgumentException(ex);
+            throw  new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_AWS_DOWNLOAD_ERROR,ex.getMessage());
         }
         return content;
     }
@@ -89,7 +92,7 @@ public class CdsModelService {
             cdsModelRepository.deleteById(cdsModelId);
         } catch (final AmazonServiceException ex) {
             log.error("Error= {} while deleting file.", ex.getMessage());
-            throw new IllegalArgumentException(ex);
+            throw  new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_AWS_DELETE_ERROR,ex.getMessage());
         }
     }
 
@@ -120,7 +123,7 @@ public class CdsModelService {
 
         } catch (IOException | ParseException ex) {
             log.error("Error parsing the Json document = ", ex.getMessage());
-            throw new IllegalArgumentException(ex);
+            throw new CdsValidationException(CDS_ERROR_CODES.CDS_MODEL_INVALID_FILE,ex.getMessage());
         }
         return CdsModelDocument.builder().modelId(cdsModelId)
                 .keywords(modelKeywordsList).build();

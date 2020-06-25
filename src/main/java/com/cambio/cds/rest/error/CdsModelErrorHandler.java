@@ -1,6 +1,5 @@
 package com.cambio.cds.rest.error;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,12 +10,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CdsModelErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value
-            = {IllegalArgumentException.class})
-    protected ResponseEntity<Object> handleConflict(
-            RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Error processing the data : " + ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+            = {CdsValidationException.class})
+    protected ResponseEntity<CdsInvalidRequest> handleError(
+            CdsValidationException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .header("Content-Type","application/json")
+                .body(CdsInvalidRequest.builder().violations(ex.getViolations()).build());
     }
 
 
