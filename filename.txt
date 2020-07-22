@@ -1,2 +1,1 @@
-test
-It was nice
+{   "id": "chf_vaccination_recommendation.v1.test",   "gdl_version": "2.0",   "concept": "gt0001",   "language": {     "original_language": "ISO_639-1::en"   },   "description": {     "details": {       "en": {         "id": "en",         "keywords": [           "HF",           "Vaccination"         ]       }     } }
