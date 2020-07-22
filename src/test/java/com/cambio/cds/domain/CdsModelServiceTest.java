@@ -47,7 +47,7 @@ class CdsModelServiceTest {
                 .willReturn(doc);
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             cdsModelService.uploadFile(cdsModelFile);
-        });
+        })
     }
 
     @Test
