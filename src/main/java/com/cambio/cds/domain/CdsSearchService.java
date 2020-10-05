@@ -70,6 +70,9 @@ public class CdsSearchService {
             List<String> mapValue = keywordDetailsMap.get(mapKey);
             if (mapValue == null) {
                 keywordDetailsMap.put(mapKey, new ArrayList<>(Arrays.asList(cdsKeyword.getKeyword())));
+                List<List<String>> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = new ArrayList<>();
+                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.add(keywordDetailsMap.put(mapKey, new ArrayList<>(Arrays.asList(cdsKeyword.getKeyword()))));
+
             } else {
                 mapValue.add(cdsKeyword.getKeyword());
             }
@@ -86,3 +89,4 @@ public class CdsSearchService {
     }
 
 }
+

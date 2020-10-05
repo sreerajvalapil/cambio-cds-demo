@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 public class CambioCdsDemoApplication {
 
+    // This is a spring boot application . It is very good to use spring boot application
     public static void main(String[] args) {
 
         SpringApplication.run(CambioCdsDemoApplication.class, args);
