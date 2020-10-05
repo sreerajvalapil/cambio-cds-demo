@@ -1,2 +1,4 @@
 test
 It was nice
+commit A
+commit B
